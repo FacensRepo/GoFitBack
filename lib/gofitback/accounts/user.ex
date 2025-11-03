@@ -300,4 +300,8 @@ defmodule Gofitback.Accounts.User do
   identities do
     identity :unique_email, [:email]
   end
+
+  relationships do
+    has_many :user_historics, Gofitback.Games.UserHistoric, public?: true
+  end
 end

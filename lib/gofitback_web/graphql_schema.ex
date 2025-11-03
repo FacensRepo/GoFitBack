@@ -2,7 +2,7 @@ defmodule GofitbackWeb.GraphqlSchema do
   use Absinthe.Schema
 
   use AshGraphql,
-    domains: [Gofitback.Accounts]
+    domains: [Gofitback.Accounts, Gofitback.Games]
 
   import_types Absinthe.Plug.Types
 

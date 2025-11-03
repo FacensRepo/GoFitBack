@@ -55,7 +55,7 @@ config :spark,
 config :gofitback,
   ecto_repos: [Gofitback.Repo],
   generators: [timestamp_type: :utc_datetime],
-  ash_domains: [Gofitback.Accounts]
+  ash_domains: [Gofitback.Accounts, Gofitback.Games]
 
 # Configures the endpoint
 config :gofitback, GofitbackWeb.Endpoint,
