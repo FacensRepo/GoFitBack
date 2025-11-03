@@ -15,7 +15,9 @@ defmodule Gofitback.Application do
       # Start a worker by calling: Gofitback.Worker.start_link(arg)
       # {Gofitback.Worker, arg},
       # Start to serve requests, typically the last entry
-      GofitbackWeb.Endpoint
+      GofitbackWeb.Endpoint,
+      {Absinthe.Subscription, GofitbackWeb.Endpoint},
+      AshGraphql.Subscription.Batcher
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

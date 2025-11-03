@@ -1,6 +1,10 @@
 defmodule GofitbackWeb.Router do
   use GofitbackWeb, :router
 
+  pipeline :graphql do
+    plug AshGraphql.Plug
+  end
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -12,6 +16,17 @@ defmodule GofitbackWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+  end
+
+  scope "/gql" do
+    pipe_through [:graphql]
+
+    forward "/playground", Absinthe.Plug.GraphiQL,
+      schema: Module.concat(["GofitbackWeb.GraphqlSchema"]),
+      socket: Module.concat(["GofitbackWeb.GraphqlSocket"]),
+      interface: :simple
+
+    forward "/", Absinthe.Plug, schema: Module.concat(["GofitbackWeb.GraphqlSchema"])
   end
 
   scope "/", GofitbackWeb do
