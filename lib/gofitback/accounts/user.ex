@@ -4,24 +4,24 @@ defmodule Gofitback.Accounts.User do
     domain: Gofitback.Accounts,
     data_layer: AshPostgres.DataLayer,
     authorizers: [Ash.Policy.Authorizer],
-    extensions: [AshAuthentication]
+    extensions: [AshAuthentication, AshGraphql.Resource]
 
   authentication do
-    add_ons do
-      log_out_everywhere do
-        apply_on_password_change? true
-      end
+    # add_ons do
+    #   log_out_everywhere do
+    #     apply_on_password_change? true
+    #   end
 
-      confirmation :confirm_new_user do
-        monitor_fields [:email]
-        confirm_on_create? true
-        confirm_on_update? false
-        require_interaction? true
-        confirmed_at_field :confirmed_at
-        auto_confirm_actions [:sign_in_with_magic_link, :reset_password_with_token]
-        sender Gofitback.Accounts.User.Senders.SendNewUserConfirmationEmail
-      end
-    end
+    #   confirmation :confirm_new_user do
+    #     monitor_fields [:email]
+    #     confirm_on_create? true
+    #     confirm_on_update? false
+    #     require_interaction? true
+    #     confirmed_at_field :confirmed_at
+    #     auto_confirm_actions [:sign_in_with_magic_link, :reset_password_with_token]
+    #     sender Gofitback.Accounts.User.Senders.SendNewUserConfirmationEmail
+    #   end
+    # end
 
     tokens do
       enabled? true
@@ -43,6 +43,28 @@ defmodule Gofitback.Accounts.User do
           request_password_reset_action_name :request_password_reset_token
         end
       end
+    end
+  end
+
+  graphql do
+    type :user
+
+    queries do
+      read_one :sign_in, :sign_in_with_password, type_name: :user_with_token
+      # list :list_users, :read_paginated
+
+      list :list_users, :read
+      # hide_inputs: [:id]
+      # get :get_by_token, :get_by_subject
+    end
+
+    mutations do
+      action :request_password_reset_token, :request_password_reset_token
+      create :create_user, :register_with_password
+      update :user_update_active, :user_update_active
+      # update :update_user, :update_user
+      # update :reset_password_with_token, :reset_password_with_token
+      # update :update_opened, :update_opened
     end
   end
 
@@ -85,6 +107,8 @@ defmodule Gofitback.Accounts.User do
     end
 
     read :sign_in_with_password do
+      graphql(type: :user_with_token, expose_metadata?: true)
+
       description "Attempt to sign in using a email and password."
       get? true
 
@@ -173,6 +197,15 @@ defmodule Gofitback.Accounts.User do
       end
     end
 
+    update :user_update_active do
+      require_atomic? false
+
+      change fn changeset, _ ->
+        value = Ash.Changeset.get_attribute(changeset, :active)
+        Ash.Changeset.change_attribute(changeset, :active, not value)
+      end
+    end
+
     action :request_password_reset_token do
       description "Send password reset instructions to a user if they exist."
 
@@ -223,8 +256,21 @@ defmodule Gofitback.Accounts.User do
   end
 
   policies do
+    policy always() do
+      authorize_if always()
+    end
+
     bypass AshAuthentication.Checks.AshAuthenticationInteraction do
       authorize_if always()
+    end
+
+    policy action(:register_with_password) do
+      authorize_if always()
+    end
+
+    policy action(:sign_in_with_password) do
+      # authorize_if always()
+      authorize_if expr(active == true)
     end
   end
 
@@ -241,7 +287,14 @@ defmodule Gofitback.Accounts.User do
       sensitive? true
     end
 
-    attribute :confirmed_at, :utc_datetime_usec
+    attribute :name, :string, allow_nil?: false, public?: true
+
+    attribute :active, :boolean, allow_nil?: false, public?: true, default: false
+
+    create_timestamp :created_at, public?: true
+    update_timestamp :updated_at, public?: true
+
+    # attribute :confirmed_at, :utc_datetime_usec
   end
 
   identities do
