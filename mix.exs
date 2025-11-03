@@ -41,6 +41,10 @@ defmodule Gofitback.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:simple_sat, "~> 0.1"},
+      {:bcrypt_elixir, "~> 3.0"},
+      {:picosat_elixir, "~> 0.2"},
+      {:ash_authentication_phoenix, "~> 2.0"},
       {:absinthe_phoenix, "~> 2.0"},
       {:ash_graphql, "~> 1.0"},
       {:sourceror, "~> 1.8", only: [:dev, :test]},

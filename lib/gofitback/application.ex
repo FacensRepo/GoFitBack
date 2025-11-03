@@ -17,7 +17,8 @@ defmodule Gofitback.Application do
       # Start to serve requests, typically the last entry
       GofitbackWeb.Endpoint,
       {Absinthe.Subscription, GofitbackWeb.Endpoint},
-      AshGraphql.Subscription.Batcher
+      AshGraphql.Subscription.Batcher,
+      {AshAuthentication.Supervisor, [otp_app: :gofitback]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -26,6 +26,9 @@ config :spark,
     remove_parens?: true,
     "Ash.Resource": [
       section_order: [
+        :authentication,
+        :token,
+        :user_identity,
         :graphql,
         :postgres,
         :resource,
@@ -51,7 +54,8 @@ config :spark,
 
 config :gofitback,
   ecto_repos: [Gofitback.Repo],
-  generators: [timestamp_type: :utc_datetime]
+  generators: [timestamp_type: :utc_datetime],
+  ash_domains: [Gofitback.Accounts]
 
 # Configures the endpoint
 config :gofitback, GofitbackWeb.Endpoint,
