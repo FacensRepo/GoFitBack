@@ -162,6 +162,10 @@ defmodule Gofitback.Accounts.User do
     create :register_with_password do
       description "Register a new user with a email and password."
 
+      argument :name, :string do
+        allow_nil? false
+      end
+
       argument :email, :ci_string do
         allow_nil? false
       end
@@ -181,6 +185,7 @@ defmodule Gofitback.Accounts.User do
 
       # Sets the email from the argument
       change set_attribute(:email, arg(:email))
+      change set_attribute(:name, arg(:name))
 
       # Hashes the provided password
       change AshAuthentication.Strategy.Password.HashPasswordChange
@@ -297,11 +302,11 @@ defmodule Gofitback.Accounts.User do
     # attribute :confirmed_at, :utc_datetime_usec
   end
 
-  identities do
-    identity :unique_email, [:email]
-  end
-
   relationships do
     has_many :user_historics, Gofitback.Games.UserHistoric, public?: true
+  end
+
+  identities do
+    identity :unique_email, [:email]
   end
 end
