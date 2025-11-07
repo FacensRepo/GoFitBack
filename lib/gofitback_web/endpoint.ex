@@ -55,12 +55,12 @@ defmodule GofitbackWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
 
-  # CORS configuration
+  # CORS configuration - must be before Session and Router
   plug Corsica,
-    origin: ["http://localhost:5173"],
-    credentials: true,
-    headers: ["Authorization", "Content-Type", "Accept"],
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+    origins: ["http://localhost:5173"],
+    allow_credentials: true,
+    allow_headers: ["authorization", "content-type", "accept"],
+    allow_methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
 
   plug GofitbackWeb.Router
 end
