@@ -55,4 +55,8 @@ defmodule Gofitback.Games.GameType do
   relationships do
     has_many :user_historics, Gofitback.Games.UserHistoric, public?: true
   end
+
+  identities do
+    identity :unique_name, [:name]
+  end
 end

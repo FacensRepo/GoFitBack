@@ -35,3 +35,5 @@ gofitback-*.tar
 npm-debug.log
 /assets/node_modules/
 
+# Fly.io files
+.fly/

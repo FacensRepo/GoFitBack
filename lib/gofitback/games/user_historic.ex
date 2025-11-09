@@ -10,6 +10,12 @@ defmodule Gofitback.Games.UserHistoric do
   Resource for ResourceName.
   """
 
+  policies do
+    policy always() do
+      authorize_if actor_present()
+    end
+  end
+
   graphql do
     type :user_historic_type
 
