@@ -1,6 +1,6 @@
 defmodule Gofitback.Games.GameType do
   use Ash.Resource,
-    otp_app: :nexus,
+    otp_app: :gofitback,
     domain: Gofitback.Games,
     data_layer: AshPostgres.DataLayer,
     extensions: [AshGraphql.Resource]

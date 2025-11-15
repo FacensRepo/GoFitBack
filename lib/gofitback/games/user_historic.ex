@@ -1,6 +1,6 @@
 defmodule Gofitback.Games.UserHistoric do
   use Ash.Resource,
-    otp_app: :nexus,
+    otp_app: :gofitback,
     domain: Gofitback.Games,
     authorizers: [Ash.Policy.Authorizer],
     data_layer: AshPostgres.DataLayer,
@@ -9,12 +9,6 @@ defmodule Gofitback.Games.UserHistoric do
   @moduledoc """
   Resource for ResourceName.
   """
-
-  policies do
-    policy always() do
-      authorize_if actor_present()
-    end
-  end
 
   graphql do
     type :user_historic_type
@@ -46,6 +40,12 @@ defmodule Gofitback.Games.UserHistoric do
         countable true
         max_page_size 10
       end
+    end
+  end
+
+  policies do
+    policy always() do
+      authorize_if actor_present()
     end
   end
 

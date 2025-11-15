@@ -5,5 +5,6 @@ defmodule Gofitback.Games do
   resources do
     resource Gofitback.Games.GameType
     resource Gofitback.Games.UserHistoric
+    resource Gofitback.Games.Checkin
   end
 end

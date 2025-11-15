@@ -304,6 +304,7 @@ defmodule Gofitback.Accounts.User do
 
   relationships do
     has_many :user_historics, Gofitback.Games.UserHistoric, public?: true
+    has_many :checkins, Gofitback.Games.Checkin, public?: true
   end
 
   identities do
