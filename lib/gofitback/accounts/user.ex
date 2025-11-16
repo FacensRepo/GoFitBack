@@ -6,6 +6,8 @@ defmodule Gofitback.Accounts.User do
     authorizers: [Ash.Policy.Authorizer],
     extensions: [AshAuthentication, AshGraphql.Resource]
 
+    require Ash.Query
+
   authentication do
     # add_ons do
     #   log_out_everywhere do
@@ -54,6 +56,7 @@ defmodule Gofitback.Accounts.User do
       # list :list_users, :read_paginated
 
       list :list_users, :read
+      list :weekly_ranking, :weekly_ranking
       # hide_inputs: [:id]
       # get :get_by_token, :get_by_subject
     end
@@ -75,6 +78,14 @@ defmodule Gofitback.Accounts.User do
 
   actions do
     defaults [:read]
+
+    read :weekly_ranking do
+      prepare fn query, _ ->
+        query
+        |> Ash.Query.load(:weekly_points)
+        |> Ash.Query.sort(weekly_points: :desc)
+      end
+    end
 
     read :get_by_subject do
       description "Get a user by the subject claim in a JWT"
@@ -273,6 +284,14 @@ defmodule Gofitback.Accounts.User do
       authorize_if always()
     end
 
+    policy action(:read) do
+      authorize_if always()
+    end
+
+    policy action(:weekly_ranking) do
+      authorize_if always()
+    end
+
     policy action(:sign_in_with_password) do
       # authorize_if always()
       authorize_if expr(active == true)
@@ -300,6 +319,15 @@ defmodule Gofitback.Accounts.User do
     update_timestamp :updated_at, public?: true
 
     # attribute :confirmed_at, :utc_datetime_usec
+  end
+
+  aggregates do
+    sum :weekly_points, :user_historics, :points do
+      filter expr(
+        created_at >= fragment("date_trunc('week', CURRENT_TIMESTAMP AT TIME ZONE 'UTC')")
+      )
+      public? true
+    end
   end
 
   relationships do
