@@ -65,6 +65,11 @@ defmodule Gofitback.Games.Checkin do
       allow_nil? false
       public? true
     end
+
+    has_one :historic, Gofitback.Games.UserHistoric do
+      public? true
+      destination_attribute :checkin_id
+    end
   end
 
   identities do

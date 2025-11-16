@@ -21,6 +21,7 @@ defmodule Gofitback.Games.UserHistoric do
     mutations do
       create :create_historic_type, :create
       update :update_historic_type, :update
+      destroy :delete_historic_type, :destroy
     end
   end
 
@@ -59,5 +60,9 @@ defmodule Gofitback.Games.UserHistoric do
   relationships do
     belongs_to :user, Gofitback.Accounts.User, public?: true
     belongs_to :game_type, Gofitback.Games.GameType, public?: true
+    belongs_to :checkin, Gofitback.Games.Checkin do
+      public? true
+      attribute_writable? true
+    end
   end
 end
