@@ -57,7 +57,10 @@ defmodule GofitbackWeb.Endpoint do
 
   # CORS configuration - must be before Session and Router
   plug Corsica,
-    origins: ["http://localhost:5173"],
+    origins: [
+      "http://localhost:5173",
+      "https://go-fit-react.vercel.app"
+    ],
     allow_credentials: true,
     allow_headers: ["authorization", "content-type", "accept"],
     allow_methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
