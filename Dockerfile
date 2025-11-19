@@ -49,13 +49,13 @@ COPY priv priv
 
 COPY lib lib
 
+# Compile the release first (generates phoenix-colocated)
+RUN mix compile
+
 COPY assets assets
 
-# compile assets
+# compile assets (after phoenix-colocated is generated)
 RUN mix assets.deploy
-
-# Compile the release
-RUN mix compile
 
 # Changes to config/runtime.exs don't require recompiling the code
 COPY config/runtime.exs config/
