@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: gofitback
+    runtime: docker
+    region: oregon
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: gofit_database
+          property: connectionString
+
+      - key: SECRET_KEY_BASE
+        generateValue: true
+
+      - key: TOKEN_SIGNING_SECRET
+        generateValue: true
+
+      # RENDER_EXTERNAL_HOSTNAME is auto-populated by Render
+      # PHX_HOST is kept as fallback for other environments
+      - key: PHX_HOST
+        value: gofitback.onrender.com
+
+      - key: PORT
+        value: 10000
+
+      - key: MIX_ENV
+        value: prod
+
+      - key: POOL_SIZE
+        value: 10
+
+    healthCheckPath: /
+# databases:
+#   - name: gofitback-db
+#     databaseName: gofitback_prod
+#     user: gofitback
+#     region: oregon
+#     plan: free
